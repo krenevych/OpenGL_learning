@@ -1,14 +1,12 @@
-// #include <glad/glad.h>
-#include <iostream>
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include <glm/vec3.hpp>
+#include <iostream>
+
 
 int main(void)
 {
 
-    glm::vec3 v = glm::vec3(1, 2, 3);
-    std::cout << v.x << ", " << v.y << ", " << v.z << "\n";
     /* Initialize the library */
     if (!glfwInit())
         return -1;
@@ -23,6 +21,12 @@ int main(void)
 
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    {
+        std::cout << "Failed to initialize GLAD" << std::endl;
+        return -1;
+    }
+
     glClearColor(1.0, 0.0, 0.0, 1.0);
 
     /* Loop until the user closes the window */
