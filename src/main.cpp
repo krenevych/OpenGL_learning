@@ -1,8 +1,14 @@
-#include <glad/glad.h>
+// #include <glad/glad.h>
+#include <iostream>
 #include <GLFW/glfw3.h>
+
+#include <glm/vec3.hpp>
 
 int main(void)
 {
+
+    glm::vec3 v = glm::vec3(1, 2, 3);
+    std::cout << v.x << ", " << v.y << ", " << v.z << "\n";
     /* Initialize the library */
     if (!glfwInit())
         return -1;

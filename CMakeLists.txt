@@ -9,6 +9,7 @@ set(ALL_LIBS
         ${OPENGL_LIBRARY}
         glfw
         glad
+        glm
 )
 
 add_subdirectory(external)
