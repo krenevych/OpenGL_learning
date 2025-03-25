@@ -8,6 +8,7 @@ find_package(OpenGL REQUIRED)
 set(ALL_LIBS
         ${OPENGL_LIBRARY}
         glfw
+        glad
 )
 
 add_subdirectory(external)
