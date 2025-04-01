@@ -14,6 +14,6 @@ set(ALL_LIBS
 
 add_subdirectory(external)
 
-add_executable(OpenGL_learning src/main.cpp)
-target_link_libraries(OpenGL_learning ${ALL_LIBS})
+add_executable(lesson1 src/lesson01/main.cpp)
+target_link_libraries(lesson1 ${ALL_LIBS})
 
