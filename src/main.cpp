@@ -35,8 +35,10 @@ int main(void)
 
     //  підготовка шейдерів
     auto vertexShaderCode = R"(
+  //    layout(location = 1) in vec3 aPos;
+
         #version 330 core
-        layout(location = 1) in vec3 aPos;
+        in vec3 aPos;
         void main() {
             gl_Position = vec4(aPos, 1.0);
         }
@@ -62,6 +64,8 @@ int main(void)
     glAttachShader(shaderProgram, fragmentShader);
     glLinkProgram(shaderProgram);
 
+    GLuint locationPosAttribs = glGetAttribLocation(shaderProgram, "aPos");
+
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 
@@ -82,14 +86,16 @@ int main(void)
 
     // Позиція вершини → location = 0 в шейдері
     glVertexAttribPointer(
-        1,                  // location = 1
+        // 0,               // location - 0
+        locationPosAttribs,                  // location - found directly
         3,                  // 3 компоненти: x, y, z
         GL_FLOAT,           // тип даних
         GL_FALSE,           // не нормалізувати
         3 * sizeof(float),  // stride: 3 float-а на вершину
         (void*)0            // offset: починаємо з 0
     );
-    glEnableVertexAttribArray(1);
+    // glEnableVertexAttribArray(0); // enables location 0
+    glEnableVertexAttribArray(locationPosAttribs);
     glBindVertexArray(0);
 
     /* Loop until the user closes the window */
