@@ -14,6 +14,17 @@ set(ALL_LIBS
 
 add_subdirectory(external)
 
-add_executable(lesson1 src/lesson01/main.cpp)
-target_link_libraries(lesson1 ${ALL_LIBS})
+# lesson 01
+add_executable(lesson01
+        src/lesson01/main.cpp
+)
+target_link_libraries(lesson01 ${ALL_LIBS})
+
+# lesson 02
+add_executable(lesson02
+        src/lesson02/main.cpp
+        src/lesson02/utils.cpp
+        src/lesson02/utils.h
+)
+target_link_libraries(lesson02 ${ALL_LIBS})
 
