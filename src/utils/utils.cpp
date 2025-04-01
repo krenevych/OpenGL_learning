@@ -32,6 +32,15 @@ GLuint createShader(std::string &filePath, GLuint shaderType) {
     glShaderSource(shader, 1, &shaderCode, nullptr);
     glCompileShader(shader);
 
+    // Перевірка компіляції шейдера
+    GLint success;
+    char infoLog[512];
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+    if (!success) {
+        glGetShaderInfoLog(shader, 512, nullptr, infoLog);
+        std::cerr << "Помилка компіляції шейдера:\n" << filePath << "\n" <<infoLog << std::endl;
+    }
+
     return shader;
 }
 
@@ -53,6 +62,15 @@ GLuint createProgram(
     glAttachShader(shaderProgram, vertexShader);
     glAttachShader(shaderProgram, fragmentShader);
     glLinkProgram(shaderProgram);
+
+    // Перевірка лінкування шейдерної програми
+    GLint success;
+    char infoLog[512];
+    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+    if (!success) {
+        glGetProgramInfoLog(shaderProgram, 512, nullptr, infoLog);
+        std::cerr << "Помилка лінкування shader program:\n" << infoLog << std::endl;
+    }
 
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
