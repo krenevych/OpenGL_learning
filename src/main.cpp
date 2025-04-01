@@ -31,12 +31,12 @@ int main(void)
         return -1;
     }
 
-    glClearColor(1.0, 0.0, 0.0, 1.0);
+    glClearColor(1.0, 1.0, 1.0, 1.0);
 
     //  підготовка шейдерів
     auto vertexShaderCode = R"(
         #version 330 core
-        layout(location = 0) in vec3 aPos;
+        layout(location = 1) in vec3 aPos;
         void main() {
             gl_Position = vec4(aPos, 1.0);
         }
@@ -66,10 +66,31 @@ int main(void)
     glDeleteShader(fragmentShader);
 
     float vertices[] = {
-        -0.5f, -0.5f, 0.f,
-         0.5f, -0.5f, 0.f,
-         0.0f,  0.5f, 0.f,
+        -0.5f, -0.5f, 0.f, 0.5f, -0.5f, 0.f, 0.0f, 0.5f, 0.f,
     };
+
+    GLuint VBO; // data
+    GLuint VAO; // vertex array object
+
+    glGenBuffers(1, &VBO);
+    glGenVertexArrays(1, &VAO);
+
+    glBindVertexArray(VAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    // Позиція вершини → location = 0 в шейдері
+    glVertexAttribPointer(
+        1,                  // location = 1
+        3,                  // 3 компоненти: x, y, z
+        GL_FLOAT,           // тип даних
+        GL_FALSE,           // не нормалізувати
+        3 * sizeof(float),  // stride: 3 float-а на вершину
+        (void*)0            // offset: починаємо з 0
+    );
+    glEnableVertexAttribArray(1);
+    glBindVertexArray(0);
 
     /* Loop until the user closes the window */
     do {
@@ -78,6 +99,9 @@ int main(void)
 
         // Rendering - gl*-function calls
         glUseProgram(shaderProgram);
+        glBindVertexArray(VAO);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glBindVertexArray(0); // VAO deactivation
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
@@ -86,6 +110,11 @@ int main(void)
         glfwPollEvents();
     } while (!glfwWindowShouldClose(window) &&
         glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS);
+
+    glDeleteBuffers(1, &VBO);
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteProgram(shaderProgram);
+
 
     // очистка ресурсів з відеокарти
 
