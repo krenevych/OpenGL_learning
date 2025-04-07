@@ -42,10 +42,6 @@ int main(void)
         "res/shaders/triangle.frag"
         );
 
-    GLuint locationPosAttribs = glGetAttribLocation(shaderProgram, "aPos");
-
-
-
     float vertices[] = {
         -0.5f, -0.5f,
          0.5f, -0.5f,
@@ -64,6 +60,7 @@ int main(void)
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     // Позиція вершини → location = 0 в шейдері
+    glEnableVertexAttribArray(0);
     glVertexAttribPointer(
         0,                  // location - 0
         2,                  // 2 компоненти: x, y
@@ -72,9 +69,6 @@ int main(void)
         2 * sizeof(float),  // stride: 2 float-а на вершину
         (void*)0            // offset: починаємо з 0
     );
-    // glEnableVertexAttribArray(0); // enables location 0
-    glEnableVertexAttribArray(locationPosAttribs);
-    glBindVertexArray(0);
 
     /* Loop until the user closes the window */
     do {
@@ -85,7 +79,6 @@ int main(void)
         glUseProgram(shaderProgram);
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
-        glBindVertexArray(0); // VAO deactivation
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
