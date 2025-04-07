@@ -35,16 +35,12 @@ int main(void)
 
     glClearColor(1.0, 1.0, 1.0, 1.0);
 
-
-
     GLuint shaderProgram = createProgram(
         "res/shaders/triangle.vert",
         "res/shaders/triangle.frag"
-        );
+    );
 
     GLuint locationPosAttribs = glGetAttribLocation(shaderProgram, "aPos");
-
-
 
     float vertices[] = {
         -0.5f, -0.5f,

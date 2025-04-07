@@ -14,25 +14,68 @@ set(ALL_LIBS
 
 add_subdirectory(external)
 
+set(UTILS_DIR src/utils)
 file(GLOB_RECURSE
         UTILS
-        src/utils/*.cpp
-        src/utils/*.h
+        ${UTILS_DIR}/*.cpp
+        ${UTILS_DIR}/*.h
 )
 
 #MESSAGE("=========" ${UTILS})
 
 # lesson 01
-add_executable(lesson01
-        src/lesson01/main.cpp
+set(LESSON_TARGET lesson01)
+set(LESSON_DIR src/${LESSON_TARGET})
+file(GLOB_RECURSE LESSON_SRC
+    ${LESSON_DIR}/*.cpp
+    ${LESSON_DIR}/*.h
 )
-target_link_libraries(lesson01 ${ALL_LIBS})
 
-# lesson 02
-add_executable(lesson02
-        src/lesson02/main.cpp
+add_executable(${LESSON_TARGET}
+        ${LESSON_SRC}
+)
+target_link_libraries(${LESSON_TARGET} ${ALL_LIBS})
+
+########## lesson 02 #########
+set(LESSON_TARGET lesson02)
+set(LESSON_DIR src/${LESSON_TARGET})
+file(GLOB_RECURSE LESSON_SRC
+        ${LESSON_DIR}/*.cpp
+        ${LESSON_DIR}/*.h
+)
+
+add_executable(${LESSON_TARGET}
+        ${LESSON_SRC}
         ${UTILS}
 )
-target_link_libraries(lesson02 ${ALL_LIBS})
-target_include_directories(lesson02 PRIVATE src/utils)
+target_link_libraries(${LESSON_TARGET} ${ALL_LIBS})
+target_include_directories(${LESSON_TARGET} PRIVATE ${UTILS_DIR})
 
+add_custom_command(
+        TARGET ${LESSON_TARGET} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/${LESSON_DIR}/res
+        $<TARGET_FILE_DIR:${LESSON_TARGET}>/res
+)
+
+######### lesson 03 #########
+set(LESSON_TARGET lesson03)
+set(LESSON_DIR src/${LESSON_TARGET})
+file(GLOB_RECURSE LESSON_SRC
+        ${LESSON_DIR}/*.cpp
+        ${LESSON_DIR}/*.h
+)
+
+add_executable(${LESSON_TARGET}
+        ${LESSON_SRC}
+        ${UTILS}
+)
+target_link_libraries(${LESSON_TARGET} ${ALL_LIBS})
+target_include_directories(${LESSON_TARGET} PRIVATE ${UTILS_DIR})
+
+add_custom_command(
+        TARGET ${LESSON_TARGET} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/${LESSON_DIR}/res
+        $<TARGET_FILE_DIR:${LESSON_TARGET}>/res
+)
