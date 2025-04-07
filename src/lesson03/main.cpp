@@ -42,22 +42,29 @@ int main(void)
 
     GLuint locationPosAttribs = glGetAttribLocation(shaderProgram, "aPos");
 
-    float vertices[] = {
+    // позиції вершин
+    float verticesPositions[] = {
         -0.5f, -0.5f,
          0.5f, -0.5f,
          0.0f,  0.5f,
     };
 
-    GLuint VBO; // data
+
+
+    GLuint pos_buffer; // data
+    GLuint color_buffer; // data
     GLuint VAO; // vertex array object
 
-    glGenBuffers(1, &VBO);
+    glGenBuffers(1, &pos_buffer);
+    glGenBuffers(1, &color_buffer);
+
     glGenVertexArrays(1, &VAO);
 
     glBindVertexArray(VAO);
 
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    // POSITIONS
+    glBindBuffer(GL_ARRAY_BUFFER, pos_buffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(verticesPositions), verticesPositions, GL_STATIC_DRAW);
 
     // Позиція вершини → location = 0 в шейдері
     glVertexAttribPointer(
@@ -68,9 +75,28 @@ int main(void)
         2 * sizeof(float),  // stride: 2 float-а на вершину
         (void*)0            // offset: починаємо з 0
     );
-    // glEnableVertexAttribArray(0); // enables location 0
-    glEnableVertexAttribArray(locationPosAttribs);
-    glBindVertexArray(0);
+    glEnableVertexAttribArray(0); // enables location 0
+
+
+    // COLORS
+    float verticesColors[] = {
+        1.0f, 0.0f, 0.0f,
+        0.0f, 1.0f, 0.0f,
+        0.0f, 0.0f, 1.0f,
+    };
+    glBindBuffer(GL_ARRAY_BUFFER, color_buffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(verticesColors), verticesColors, GL_STATIC_DRAW);
+
+    // Позиція вершини → location = 1 в шейдері
+    glVertexAttribPointer(
+        1,                  // location - 1
+        3,                  // 2 компоненти: x, y
+        GL_FLOAT,           // тип даних
+        GL_FALSE,           // не нормалізувати
+        3 * sizeof(float),  // stride: 2 float-а на вершину
+        (void*)0            // offset: починаємо з 0
+    );
+    glEnableVertexAttribArray(1);
 
     /* Loop until the user closes the window */
     do {
@@ -91,7 +117,8 @@ int main(void)
     } while (!glfwWindowShouldClose(window) &&
         glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS);
 
-    glDeleteBuffers(1, &VBO);
+    glDeleteBuffers(1, &pos_buffer);
+    glDeleteBuffers(1, &color_buffer);
     glDeleteVertexArrays(1, &VAO);
     glDeleteProgram(shaderProgram);
 
