@@ -47,6 +47,8 @@ file(GLOB_RECURSE LESSON_SRC
 add_executable(${LESSON_TARGET}
         ${LESSON_SRC}
         ${UTILS}
+        src/utils/texture.h
+        src/utils/texture.cpp
 )
 target_link_libraries(${LESSON_TARGET} ${ALL_LIBS})
 target_include_directories(${LESSON_TARGET} PRIVATE ${UTILS_DIR})

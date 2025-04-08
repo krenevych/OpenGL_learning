@@ -4,11 +4,10 @@
 #include <iostream>
 
 #include "utils.h"
+#include "texture.h"
 
 
-int main(void)
-{
-
+int main(void) {
     /* Initialize the library */
     if (!glfwInit())
         return -1;
@@ -20,8 +19,7 @@ int main(void)
 
     /* Create a windowed mode window and its OpenGL context */
     GLFWwindow *window = glfwCreateWindow(640, 480, "Hello World", nullptr, nullptr);
-    if (!window)
-    {
+    if (!window) {
         glfwTerminate();
         return -1;
     }
@@ -40,15 +38,13 @@ int main(void)
         "res/shaders/rect.frag"
     );
 
-    GLuint locationPosAttribs = glGetAttribLocation(shaderProgram, "aPos");
-
     // позиції вершин та кольори
     float vertices[] = {
         // перший трикутник
-        /* позиції */ -0.5f, -0.5f,   /* кольори */ 1.0f, 0.0f, 0.0f,     // вершгина 0
-        /* позиції */  0.5f, -0.5f,   /* кольори */ 0.0f, 1.0f, 0.0f,     // вершгина 1
-        /* позиції */  0.5f,  0.5f,   /* кольори */ 0.0f, 0.0f, 1.0f,     // вершгина 2
-        /* позиції */ -0.5f,  0.5f,   /* кольори */ 1.0f, 0.0f, 1.0f,     // вершгина 3
+        /* позиції */ -0.5f, -0.5f, /* texture coordinates */ 0.0f, 0.0f, // вершгина 0
+        /* позиції */ 0.5f, -0.5f, /* texture coordinates */ 1.0f, 0.0f, // вершгина 1
+        /* позиції */ 0.5f, 0.5f, /* texture coordinates */ 1.0f, 1.0f, // вершгина 2
+        /* позиції */ -0.5f, 0.5f, /* texture coordinates */ 0.0f, 1.0f, // вершгина 3
     };
 
     unsigned int indices[]{
@@ -70,23 +66,23 @@ int main(void)
 
     // Позиція вершини → location = 0 в шейдері
     glVertexAttribPointer(
-        0,                  // location - 0
-        2,                  // 2 компоненти: x, y
-        GL_FLOAT,           // тип даних
-        GL_FALSE,           // не нормалізувати
-        5 * sizeof(float),  // stride: 5 float-а на вершину
-        (void*)0           // offset: починаємо з 0
+        0, // location - 0
+        2, // 2 компоненти: x, y
+        GL_FLOAT, // тип даних
+        GL_FALSE, // не нормалізувати
+        4 * sizeof(float), // stride: 5 float-а на вершину
+        (void *) 0 // offset: починаємо з 0
     );
     glEnableVertexAttribArray(0); // enables location 0
 
     // Кольори вершини → location = 1 в шейдері
     glVertexAttribPointer(
-        1,                  // location - 1
-        3,                  // 3 компоненти: r, g, b
-        GL_FLOAT,           // тип даних
-        GL_FALSE,           // не нормалізувати
-        5 * sizeof(float),  // stride: 5 float-а на вершину
-        (void*)(sizeof(float) * 2)            // offset: починаємо з 2
+        1, // location - 1
+        2, // 2 компоненти: u, v
+        GL_FLOAT, // тип даних
+        GL_FALSE, // не нормалізувати
+        4 * sizeof(float), // stride: 5 float-а на вершину
+        (void *) (sizeof(float) * 2) // offset: починаємо з 2
     );
     glEnableVertexAttribArray(1); // enables location 1
 
@@ -94,7 +90,22 @@ int main(void)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
+    GLint tectureLoc0 = glGetUniformLocation(shaderProgram, "uTexture0");
+    GLint tectureLoc1 = glGetUniformLocation(shaderProgram, "uTexture1");
+    GLint tectureLoc2 = glGetUniformLocation(shaderProgram, "uTexture2");
 
+    GLuint texture0 = loadTexture("res/textures/house.jpg");
+    GLuint texture1 = loadTexture("res/textures/girl.jpg");
+    GLuint texture2 = loadTexture("res/textures/mandrill.png");
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture0);
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, texture1);
+
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, texture2);
 
     /* Loop until the user closes the window */
     do {
@@ -103,6 +114,10 @@ int main(void)
 
         // Rendering - gl*-function calls
         glUseProgram(shaderProgram);
+        glUniform1i(tectureLoc0, 0); // GL_TEXTURE0
+        glUniform1i(tectureLoc1, 1); // GL_TEXTURE1
+        glUniform1i(tectureLoc2, 2); // GL_TEXTURE2
+
         glBindVertexArray(VAO);
         // glDrawArrays(GL_TRIANGLES, 0, 6);
         glDrawElements(GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, nullptr);
@@ -114,7 +129,7 @@ int main(void)
         /* Poll for and process events */
         glfwPollEvents();
     } while (!glfwWindowShouldClose(window) &&
-        glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS);
+             glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS);
 
     glDeleteBuffers(1, &vert_buffer);
     glDeleteVertexArrays(1, &VAO);
