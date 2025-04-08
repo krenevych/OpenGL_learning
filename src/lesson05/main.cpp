@@ -40,7 +40,9 @@ int main(void)
         "res/shaders/rect.frag"
     );
 
-    GLuint locationPosAttribs = glGetAttribLocation(shaderProgram, "aPos");
+    // GLuint locationPosAttribs = glGetAttribLocation(shaderProgram, "aPos");
+    // GLuint = unsigned int
+    GLint locationAmbientColorUniform = glGetUniformLocation(shaderProgram, "ambientColor");
 
     // позиції вершин та кольори
     float vertices[] = {
@@ -94,8 +96,6 @@ int main(void)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-
-
     /* Loop until the user closes the window */
     do {
         /* Render here */
@@ -103,6 +103,7 @@ int main(void)
 
         // Rendering - gl*-function calls
         glUseProgram(shaderProgram);
+        glUniform4f(locationAmbientColorUniform, 0.0f, 1.0f, 1.0f, 1.0f);
         glBindVertexArray(VAO);
         // glDrawArrays(GL_TRIANGLES, 0, 6);
         glDrawElements(GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, nullptr);
@@ -119,7 +120,6 @@ int main(void)
     glDeleteBuffers(1, &vert_buffer);
     glDeleteVertexArrays(1, &VAO);
     glDeleteProgram(shaderProgram);
-
 
     // очистка ресурсів з відеокарти
 
