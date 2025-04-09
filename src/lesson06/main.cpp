@@ -4,6 +4,8 @@
 #include <iostream>
 
 #include "utils.h"
+#include "texture.h"
+
 
 
 int main(void)
@@ -47,10 +49,10 @@ int main(void)
     // позиції вершин та кольори
     float vertices[] = {
         // перший трикутник
-        /* позиції */ -0.5f, -0.5f,   /* кольори */ 1.0f, 0.0f, 0.0f,     // вершгина 0
-        /* позиції */  0.5f, -0.5f,   /* кольори */ 0.0f, 1.0f, 0.0f,     // вершгина 1
-        /* позиції */  0.5f,  0.5f,   /* кольори */ 0.0f, 0.0f, 1.0f,     // вершгина 2
-        /* позиції */ -0.5f,  0.5f,   /* кольори */ 1.0f, 0.0f, 1.0f,     // вершгина 3
+        /* позиції */ -0.5f, -0.5f,   /* кольори */ 1.0f, 0.0f, 0.0f, /* текстурні координати */  0.0, 0.0,   // вершгина 0
+        /* позиції */  0.5f, -0.5f,   /* кольори */ 0.0f, 1.0f, 0.0f, /* текстурні координати */  1.0, 0.0,   // вершгина 1
+        /* позиції */  0.5f,  0.5f,   /* кольори */ 0.0f, 0.0f, 1.0f, /* текстурні координати */  1.0, 1.0,   // вершгина 2
+        /* позиції */ -0.5f,  0.5f,   /* кольори */ 1.0f, 0.0f, 1.0f, /* текстурні координати */  0.0, 1.0,   // вершгина 3
     };
 
     unsigned int indices[]{
@@ -76,25 +78,40 @@ int main(void)
         2,                  // 2 компоненти: x, y
         GL_FLOAT,           // тип даних
         GL_FALSE,           // не нормалізувати
-        5 * sizeof(float),  // stride: 5 float-а на вершину
+        7 * sizeof(float),  // stride: 5 float-а на вершину
         (void*)0           // offset: починаємо з 0
     );
     glEnableVertexAttribArray(0); // enables location 0
 
     // Кольори вершини → location = 1 в шейдері
+    glEnableVertexAttribArray(1);
     glVertexAttribPointer(
         1,                  // location - 1
         3,                  // 3 компоненти: r, g, b
         GL_FLOAT,           // тип даних
         GL_FALSE,           // не нормалізувати
-        5 * sizeof(float),  // stride: 5 float-а на вершину
+        7 * sizeof(float),  // stride: 5 float-а на вершину
         (void*)(sizeof(float) * 2)            // offset: починаємо з 2
     );
-    glEnableVertexAttribArray(1); // enables location 1
+    // enables location 1
+
+    // Текстурні координати → location = 2 в шейдері
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(
+        2,                  // location - 2
+        2,                  // 3 компоненти: r, g, b
+        GL_FLOAT,           // тип даних
+        GL_FALSE,           // не нормалізувати
+        7 * sizeof(float),  // stride: 5 float-а на вершину
+        (void*)(sizeof(float) * 5)            // offset: починаємо з 5
+    );
+    // enables location 1
 
     // Indices
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+    unsigned int texture01 = loadTexture("res/textures/girl.jpg");
 
     /* Loop until the user closes the window */
     do {
