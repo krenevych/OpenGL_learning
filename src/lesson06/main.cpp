@@ -116,36 +116,27 @@ int main(void)
     auto texture2_loc = glGetUniformLocation(shaderProgram, "texture2");
 
     unsigned int texture0_id = loadTexture("res/textures/girl.jpg");
-    glBindTexture(GL_TEXTURE_2D, texture0_id);
-    glActiveTexture(GL_TEXTURE0);
-
     unsigned int texture1_id = loadTexture("res/textures/house.jpg");
-    glBindTexture(GL_TEXTURE_2D, texture1_id);
-    glActiveTexture(GL_TEXTURE1);
-
     unsigned int texture2_id = loadTexture("res/textures/mandrill.png");
-    glBindTexture(GL_TEXTURE_2D, texture2_id);
-    glActiveTexture(GL_TEXTURE2);
 
     /* Loop until the user closes the window */
     do {
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
 
-
         // Rendering - gl*-function calls
         glUseProgram(shaderProgram);
 
-        glBindTexture(GL_TEXTURE_2D, texture0_id);
         glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, texture0_id);
         glUniform1i(texture0_loc, 0);
 
-        glBindTexture(GL_TEXTURE_2D, texture1_id);
         glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, texture1_id);
         glUniform1i(texture1_loc, 1);
 
-        glBindTexture(GL_TEXTURE_2D, texture2_id);
         glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_2D, texture2_id);
         glUniform1i(texture2_loc, 2);
 
         glUniform4f(locationAmbientColorUniform, 0.0f, 1.0f, 1.0f, 1.0f);
@@ -153,6 +144,7 @@ int main(void)
 
         glDrawElements(GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, nullptr);
         glBindVertexArray(0); // VAO deactivation
+
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
