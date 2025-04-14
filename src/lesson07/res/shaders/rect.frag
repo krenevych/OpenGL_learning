@@ -17,7 +17,7 @@ void main() {
     vec4 color1 = texture(texture1, vTex);
     vec4 color2 = texture(texture2, vTex);
 
-//    FragColor = color0;
+    FragColor = color0;
 //    FragColor = color1;
-    FragColor = color2;
+//    FragColor = color2 * ambientColor;
 }
