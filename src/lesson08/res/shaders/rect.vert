@@ -10,12 +10,14 @@ layout(location = 2) in vec2 aTex;
 out vec4 vColor;
 out vec2 vTex;  // transfer (with interpolation) into fragment shader
 
-uniform mat4 transformation;
+uniform mat4 Model; // трансформація моделі
+uniform mat4 View; // як розташована камера, перетворює позіцію в систему координат камери
+uniform mat4 Projection; // проекція камери
 
 
 void main() {
-    // gl_Position = vec4(aPos, 1.0);
-    gl_Position = transformation * aPos;
+    mat4 MVP = Projection * View  * Model;
+    gl_Position =  MVP * aPos;
     vColor = aColor;
     vTex = aTex;
     vTex.y = 1.0 - vTex.y;

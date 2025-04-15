@@ -20,8 +20,10 @@ int main(void) {
     // glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // для macOS
 
 
+    auto width = 1280;
+    auto height = 720;
     /* Create a windowed mode window and its OpenGL context */
-    GLFWwindow *window = glfwCreateWindow(640, 480, "Hello World", nullptr, nullptr);
+    GLFWwindow *window = glfwCreateWindow(width, height, "Hello World", nullptr, nullptr);
     if (!window) {
         glfwTerminate();
         return -1;
@@ -48,17 +50,45 @@ int main(void) {
 
     // позиції вершин та кольори
     float vertices[] = {
-        // перший трикутник
-        /* позиції */ -0.5f, -0.5f, /* кольори */ 1.0f, 0.0f, 0.0f, /* текстурні координати */ 0.0, 0.0, // вершгина 0
-        /* позиції */ 0.5f, -0.5f, /* кольори */ 0.0f, 1.0f, 0.0f, /* текстурні координати */ 1.0, 0.0, // вершгина 1
-        /* позиції */ 0.5f, 0.5f, /* кольори */ 0.0f, 0.0f, 1.0f, /* текстурні координати */ 1.0, 1.0, // вершгина 2
-        /* позиції */ -0.5f, 0.5f, /* кольори */ 1.0f, 0.0f, 1.0f, /* текстурні координати */ 0.0, 1.0, // вершгина 3
+
+        /* позиції */  0.0f,  0.0f, 0.0f, /* кольори */ 1.0f, 0.0f, 0.0f, /* текстурні координати */ 0.0, 0.0, // вершгина 0
+        /* позиції */  1.0f,  0.0f, 0.0f, /* кольори */ 0.0f, 1.0f, 0.0f, /* текстурні координати */ 1.0, 0.0, // вершгина 1
+        /* позиції */  1.0f,  1.0f, 0.0f, /* кольори */ 0.0f, 0.0f, 1.0f, /* текстурні координати */ 1.0, 1.0, // вершгина 2
+        /* позиції */  0.0f,  1.0f, 0.0f, /* кольори */ 1.0f, 0.0f, 1.0f, /* текстурні координати */ 0.0, 1.0, // вершгина 3
+
+        /* позиції */  0.0f,  0.0f, 1.0f, /* кольори */ 1.0f, 0.0f, 0.0f, /* текстурні координати */ 0.0, 0.0, // вершгина 0
+        /* позиції */  1.0f,  0.0f, 1.0f, /* кольори */ 0.0f, 1.0f, 0.0f, /* текстурні координати */ 1.0, 0.0, // вершгина 1
+        /* позиції */  1.0f,  1.0f, 1.0f, /* кольори */ 0.0f, 0.0f, 1.0f, /* текстурні координати */ 1.0, 1.0, // вершгина 2
+        /* позиції */  0.0f,  1.0f, 1.0f, /* кольори */ 1.0f, 0.0f, 1.0f, /* текстурні координати */ 0.0, 1.0, // вершгина 3
+
     };
 
-    unsigned int indices[]{
-        0, 1, 2, // перший трикутник
-        0, 2, 3, // другий трикутник
+    unsigned int indices[] = {
+        // передня грань (z = 0)
+        0, 1, 2,
+        2, 3, 0,
+
+        // задня грань (z = 1)
+        4, 5, 6,
+        6, 7, 4,
+
+        // ліва грань (x = 0)
+        0, 3, 7,
+        7, 4, 0,
+
+        // права грань (x = 1)
+        1, 5, 6,
+        6, 2, 1,
+
+        // нижня грань (y = 0)
+        0, 1, 5,
+        5, 4, 0,
+
+        // верхня грань (y = 1)
+        3, 2, 6,
+        6, 7, 3
     };
+
 
     GLuint vert_buffer, index_buffer; // data
     GLuint VAO; // vertex array object
@@ -73,15 +103,16 @@ int main(void) {
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     // Позиція вершини → location = 0 в шейдері
+    glEnableVertexAttribArray(0);
     glVertexAttribPointer(
         0, // location - 0
-        2, // 2 компоненти: x, y
+        3, // 3 компоненти: x, y, z
         GL_FLOAT, // тип даних
         GL_FALSE, // не нормалізувати
-        7 * sizeof(float), // stride: 5 float-а на вершину
+        8 * sizeof(float), // stride: 5 float-а на вершину
         (void *) 0 // offset: починаємо з 0
     );
-    glEnableVertexAttribArray(0); // enables location 0
+    // enables location 0
 
     // Кольори вершини → location = 1 в шейдері
     glEnableVertexAttribArray(1);
@@ -90,8 +121,8 @@ int main(void) {
         3, // 3 компоненти: r, g, b
         GL_FLOAT, // тип даних
         GL_FALSE, // не нормалізувати
-        7 * sizeof(float), // stride: 5 float-а на вершину
-        (void *) (sizeof(float) * 2) // offset: починаємо з 2
+        8 * sizeof(float), // stride: 5 float-а на вершину
+        (void *) (sizeof(float) * 3) // offset: починаємо з 2
     );
     // enables location 1
 
@@ -102,8 +133,8 @@ int main(void) {
         2, // 3 компоненти: r, g, b
         GL_FLOAT, // тип даних
         GL_FALSE, // не нормалізувати
-        7 * sizeof(float), // stride: 5 float-а на вершину
-        (void *) (sizeof(float) * 5) // offset: починаємо з 5
+        8 * sizeof(float), // stride: 5 float-а на вершину
+        (void *) (sizeof(float) * 6) // offset: починаємо з 5
     );
     // enables location 1
 
@@ -111,24 +142,38 @@ int main(void) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-    auto texture0_loc = glGetUniformLocation(shaderProgram, "texture0");
-    auto texture1_loc = glGetUniformLocation(shaderProgram, "texture1");
-    auto texture2_loc = glGetUniformLocation(shaderProgram, "texture2");
+    auto texture0_loc = glGetUniformLocation(shaderProgram, "MainTexture");
 
     unsigned int texture0_id = loadTexture("res/textures/girl.jpg");
-    unsigned int texture1_id = loadTexture("res/textures/house.jpg");
-    unsigned int texture2_id = loadTexture("res/textures/mandrill.png");
 
     float t = 0;
     float deltaT = 0.01f;
 
-    auto transformLoc = glGetUniformLocation(shaderProgram, "transformation");
-    auto transformation = glm::mat4(1.0f);
+    auto modelLoc = glGetUniformLocation(shaderProgram, "Model");
+    auto viewLoc = glGetUniformLocation(shaderProgram, "View");
+    auto projectionLoc = glGetUniformLocation(shaderProgram, "Projection");
+    auto model = glm::mat4(1.0f);
+
+    glm::mat4 view = glm::lookAt(
+        glm::vec3(0.0f, 1.5f, 4.0f), // позиція камери
+        glm::vec3(0.0f, 0.0f, 0.0f), // куди дивимось
+        glm::vec3(0.0f, 1.0f, 0.0f) // вектор вгору
+    );
+
+
+    glm::mat4 projection = glm::perspective(
+        glm::radians(45.0f),
+        (float)width / (float)height,
+        0.1f,
+        100.0f
+    );
+
+    glEnable(GL_DEPTH_TEST);
 
     /* Loop until the user closes the window */
     do {
         /* Render here */
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // Rendering - gl*-function calls
         glUseProgram(shaderProgram);
@@ -136,14 +181,6 @@ int main(void) {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture0_id);
         glUniform1i(texture0_loc, 0);
-
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, texture1_id);
-        glUniform1i(texture1_loc, 1);
-
-        glActiveTexture(GL_TEXTURE2);
-        glBindTexture(GL_TEXTURE_2D, texture2_id);
-        glUniform1i(texture2_loc, 2);
 
         // t = glfwGetTime();
         if (t > 1.0f || t < 0.0f) {
@@ -153,13 +190,15 @@ int main(void) {
         t += deltaT;
         glUniform4f(locationAmbientColorUniform, 0.0f, t, 0.0f, 1.0f);
 
-        // transform - матриця трансформації
 
-        transformation = glm::rotate(transformation, glm::radians(5.0f) / 10, glm::vec3(0.0f, 0.0f, 1.0f));
-        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transformation));
+        model = glm::rotate(model, glm::radians(5.0f) / 10, glm::vec3(0.0f, 1.0f, 0.0f));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, (float*)(&view));
+        glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, (float*)(&projection));
+
         glBindVertexArray(VAO);
 
-        glDrawElements(GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, nullptr);
+        glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(unsigned int), GL_UNSIGNED_INT, nullptr);
         glBindVertexArray(0); // VAO deactivation
 
 
@@ -175,8 +214,6 @@ int main(void) {
     glDeleteBuffers(1, &vert_buffer);
     glDeleteBuffers(1, &index_buffer);
     glDeleteTextures(1, &texture0_id);
-    glDeleteTextures(1, &texture1_id);
-    glDeleteTextures(1, &texture2_id);
     glDeleteVertexArrays(1, &VAO);
     glDeleteProgram(shaderProgram);
 
