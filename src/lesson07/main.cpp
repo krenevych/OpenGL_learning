@@ -155,7 +155,7 @@ int main(void) {
 
         // transform - матриця трансформації
 
-        transformation = glm::rotate(transformation, glm::radians(45.0f) / 10, glm::vec3(0.0f, 0.0f, 1.0f));
+        transformation = glm::rotate(transformation, glm::radians(5.0f) / 10, glm::vec3(0.0f, 0.0f, 1.0f));
         glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transformation));
         glBindVertexArray(VAO);
 
@@ -171,11 +171,15 @@ int main(void) {
     } while (!glfwWindowShouldClose(window) &&
              glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS);
 
+    // очистка ресурсів з відеокарти
     glDeleteBuffers(1, &vert_buffer);
+    glDeleteBuffers(1, &index_buffer);
+    glDeleteTextures(1, &texture0_id);
+    glDeleteTextures(1, &texture1_id);
+    glDeleteTextures(1, &texture2_id);
     glDeleteVertexArrays(1, &VAO);
     glDeleteProgram(shaderProgram);
 
-    // очистка ресурсів з відеокарти
 
     glfwTerminate();
     return 0;
