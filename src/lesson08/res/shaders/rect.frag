@@ -9,6 +9,6 @@ uniform vec4 ambientColor;
 uniform sampler2D MainTexture; // нульовий текстурний юніт
 
 void main() {
-//    FragColor = texture(MainTexture, vTex);
-    FragColor = vColor;
+    FragColor = texture(MainTexture, vTex);
+//    FragColor = vColor;
 }
