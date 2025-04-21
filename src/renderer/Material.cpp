@@ -5,4 +5,15 @@
 #include "Material.h"
 
 namespace Renderer {
+    Material::Material() {
+    }
+
+    Material::~Material() {
+    }
+
+    void Material::bind() {
+    }
+
+    void Material::unbind() {
+    }
 } // Renderer

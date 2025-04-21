@@ -8,6 +8,16 @@
 namespace Renderer {
 
 class Material {
+    public:
+    Material();
+    virtual ~Material();
+
+    void bind();
+
+    void unbind();
+
+    private:
+
 
 };
 

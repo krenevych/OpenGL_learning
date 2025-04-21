@@ -6,11 +6,21 @@
 #define GEOMETRY_H
 
 namespace Renderer {
+    class Geometry {
+    public:
+        Geometry();
 
-class Geometry {
+        virtual ~Geometry();
 
-};
+        void bind();
 
+        void unbind();
+
+        void draw();
+
+    private:
+
+    };
 } // Renderer
 
 #endif //GEOMETRY_H

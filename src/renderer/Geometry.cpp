@@ -5,4 +5,18 @@
 #include "Geometry.h"
 
 namespace Renderer {
+    Geometry::Geometry() {
+    }
+
+    Geometry::~Geometry() {
+    }
+
+    void Geometry::bind() {
+    }
+
+    void Geometry::unbind() {
+    }
+
+    void Geometry::draw() {
+    }
 } // Renderer

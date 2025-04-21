@@ -4,13 +4,28 @@
 
 #ifndef MODEL_H
 #define MODEL_H
+#include <memory>
+
+#include "Geometry.h"
+#include "Material.h"
+#include "Transformation.h"
 
 namespace Renderer {
+    class Model {
+    public:
+        Model();
 
-class Model {
+        virtual ~Model();
 
-};
+        void draw();
 
+    private:
+
+        std::shared_ptr<Geometry> mGeometry;
+        std::shared_ptr<Material> mMaterial;
+        std::shared_ptr<Transformation> mTransform;
+
+    };
 } // Renderer
 
 #endif //MODEL_H
