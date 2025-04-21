@@ -193,3 +193,35 @@ add_custom_command(
         $<TARGET_FILE_DIR:${LESSON_TARGET}>/res
 )
 
+############# renderer #############
+set(RENDERER_DIR src/renderer)
+file(GLOB_RECURSE RENDERER_SRC
+        ${RENDERER_DIR}/*.cpp
+        ${RENDERER_DIR}/*.h
+        ${RENDERER_DIR}/*.inl
+)
+
+######### lesson 09 #########
+set(LESSON_TARGET lesson09)
+set(LESSON_DIR src/${LESSON_TARGET})
+file(GLOB_RECURSE LESSON_SRC
+        ${LESSON_DIR}/*.cpp
+        ${LESSON_DIR}/*.h
+)
+
+add_executable(${LESSON_TARGET}
+        ${LESSON_SRC}
+        ${UTILS}
+        ${RENDERER_SRC}
+)
+target_link_libraries(${LESSON_TARGET} ${ALL_LIBS})
+target_include_directories(${LESSON_TARGET} PRIVATE ${UTILS_DIR})
+target_include_directories(${LESSON_TARGET} PRIVATE ${RENDERER_DIR})
+
+add_custom_command(
+        TARGET ${LESSON_TARGET} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/${LESSON_DIR}/res
+        $<TARGET_FILE_DIR:${LESSON_TARGET}>/res
+)
+
