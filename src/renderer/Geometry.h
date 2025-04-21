@@ -9,6 +9,14 @@
 #include "glad/glad.h"
 
 namespace Renderer {
+
+    struct Attribute {
+        std::string name;
+        unsigned int size;
+        int offset;
+        int location;
+    };
+
     class Geometry {
     public:
         Geometry();
@@ -17,6 +25,7 @@ namespace Renderer {
 
         void setVertices(const std::vector<float>& vertices);
         void setIndices(const std::vector<unsigned int>& indices);
+        void addAttribute(const std::string &name, unsigned int size, int offset, int location);
 
         void bind();
 
@@ -33,6 +42,7 @@ namespace Renderer {
 
         std::vector<float> mVertices;
         std::vector<unsigned int> mIndices;
+        std::vector<Attribute> mAttributes;
 
     };
 } // Renderer

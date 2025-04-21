@@ -46,6 +46,16 @@ namespace Renderer {
 
     }
 
+    void Geometry::addAttribute(const std::string& name, unsigned int size, int offset, int location) {
+        auto attrib = Attribute {
+            .name = name,
+            .size = size,
+            .offset = offset,
+            .location = location
+        };
+        mAttributes.push_back(attrib);
+    }
+
     void Geometry::bind() {
         glBindVertexArray(VAO);
 

@@ -133,6 +133,11 @@ int main(void) {
         1.0f, 1.0f, 1.0f,   1.0f, 0.0f, 1.0f,    /* текстурні координати */ 1.0, 1.0,
         0.0f, 1.0f, 1.0f,   1.0f, 0.0f, 1.0f,    /* текстурні координати */ 0.0, 1.0,
    });
+
+    cubeGeom.addAttribute("aPos", 3, 0, 0);
+    cubeGeom.addAttribute("aColor", 3, 3, 1);
+    cubeGeom.addAttribute("aTex", 2, 6, 2);
+
     cubeGeom.setIndices({
         0, 1, 2,  2, 3, 0,       // передня
         4, 5, 6,  6, 7, 4,       // задня
