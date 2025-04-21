@@ -4,19 +4,70 @@
 
 #include "Geometry.h"
 
+
 namespace Renderer {
-    Geometry::Geometry() {
+    Geometry::Geometry()
+        : VAO(0),
+          vert_buffer(0),
+          index_buffer(0) {
+
+        glGenVertexArrays(1, &VAO);
+        glGenBuffers(1, &vert_buffer);
+        // glGenBuffers(1, &index_buffer); // модель може бути безіндексна, тому цей буфер будемо створювати лише коли будемо додавати індекси
     }
 
     Geometry::~Geometry() {
+        glDeleteBuffers(1, &vert_buffer);
+        glDeleteBuffers(1, &index_buffer);
+        glDeleteVertexArrays(1, &VAO);
+    }
+
+    void Geometry::setVertices(const std::vector<float> &vertices) {
+        mVertices = vertices;
+
+        glBindVertexArray(VAO);
+        // Vertices
+        glBindBuffer(GL_ARRAY_BUFFER, vert_buffer);
+        glBufferData(GL_ARRAY_BUFFER, mVertices.size() * sizeof(float), mVertices.data(), GL_STATIC_DRAW);
+
+
+    }
+
+    void Geometry::setIndices(const std::vector<unsigned int> &indices) {
+        mIndices = indices;
+
+        glGenBuffers(1, &index_buffer);
+
+        glBindVertexArray(VAO);
+        // Indices
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, mIndices.size() * sizeof(unsigned int), mIndices.data(), GL_STATIC_DRAW);
+
+
     }
 
     void Geometry::bind() {
+        glBindVertexArray(VAO);
+
     }
 
     void Geometry::unbind() {
+        glBindVertexArray(0);
     }
 
     void Geometry::draw() {
+        if (index_buffer != 0) {  // індексна модель, бо згенерований індексний буфер
+            glDrawElements(GL_TRIANGLES, getVertexCount() , GL_UNSIGNED_INT, nullptr);
+        } else {
+            glDrawArrays(GL_TRIANGLES, 0, getVertexCount() );
+        }
+    }
+
+    int Geometry::getVertexCount() {
+        if (index_buffer != 0) {
+            return mIndices.size();
+        } else {
+            return 0; // TODO:
+        }
     }
 } // Renderer
