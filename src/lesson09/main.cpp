@@ -95,12 +95,15 @@ int main(void) {
     ///// SET GEOMETRY FINISH
 
     ///// SET MATERIAL START
-    GLuint shaderProgram = createProgram(
+    // GLuint shaderProgram = createProgram(
+    //     "res/shaders/rect.vert",
+    //     "res/shaders/rect.frag"
+    // );
+
+    auto progam = std::make_shared<Renderer::Program>(
         "res/shaders/rect.vert",
         "res/shaders/rect.frag"
     );
-
-    auto progam = std::make_shared<Renderer::Program>();
     auto material = std::make_shared<Renderer::Material>();
     material->setProgram(progam);
     // додамо текстури, властивості і т.д.
@@ -112,6 +115,8 @@ int main(void) {
     model->setGeometry(cubeGeom);
     model->setMaterial(material);
 
+    // FIXME: remove after material created
+    const auto& shaderProgram  = progam->getShaderProgram();
     auto texture0_loc = glGetUniformLocation(shaderProgram, "MainTexture");
 
     unsigned int texture0_id = loadTexture("res/textures/girl.jpg");
@@ -146,7 +151,8 @@ int main(void) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // Rendering - gl*-function calls
-        glUseProgram(shaderProgram);
+         // glUseProgram(shaderProgram);
+        model->bind();
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture0_id);

@@ -12,9 +12,11 @@ namespace Renderer {
     }
 
     void Material::bind() {
+        mProgram->activate();
     }
 
     void Material::unbind() {
+        mProgram->deactivate();
     }
 
     void Material::setProgram(std::shared_ptr<Program>& program) {
