@@ -11,7 +11,10 @@
 namespace Renderer {
     class Material {
     public:
-        Material();
+        Material(
+            const std::string &vertPath,
+            const std::string &fragPath
+        );
 
         virtual ~Material();
 
@@ -19,11 +22,12 @@ namespace Renderer {
 
         void unbind();
 
-        void setProgram(std::shared_ptr<Program>& program);
+        void setProgram(std::shared_ptr<Program> &program);
+
+        unsigned int getShaderProgram();
 
     private:
         std::shared_ptr<Program> mProgram;
-
     };
 } // Renderer
 

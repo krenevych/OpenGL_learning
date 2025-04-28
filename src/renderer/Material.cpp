@@ -5,7 +5,8 @@
 #include "Material.h"
 
 namespace Renderer {
-    Material::Material() {
+    Material::Material(const std::string &vertPath, const std::string &fragPath) {
+        mProgram = std::make_shared<Program>(vertPath, fragPath);
     }
 
     Material::~Material() {
@@ -21,5 +22,9 @@ namespace Renderer {
 
     void Material::setProgram(std::shared_ptr<Program>& program) {
         mProgram = program;
+    }
+
+    unsigned int Material::getShaderProgram() {
+        return mProgram->getShaderProgram();
     }
 } // Renderer
