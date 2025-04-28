@@ -7,6 +7,7 @@
 #include <memory>
 
 #include "Program.h"
+#include "Texture.h"
 
 namespace Renderer {
     class Material {
@@ -26,8 +27,13 @@ namespace Renderer {
 
         unsigned int getShaderProgram();
 
+        void addTexture(std::shared_ptr<Texture> &texture);
+
     private:
         std::shared_ptr<Program> mProgram;
+        std::vector<std::shared_ptr<Texture>> mTextures;
+
+
     };
 } // Renderer
 

@@ -41,6 +41,7 @@ int main(void) {
 
     glClearColor(1.0, 1.0, 1.0, 1.0);
 
+    ///// SET GEOMETRY START
     auto cubeGeom = std::make_shared<Renderer::Geometry>();
     cubeGeom->setVertices({
         // -------- Передня грань (червона) --------
@@ -102,6 +103,8 @@ int main(void) {
     );
 
     // додамо текстури, властивості і т.д.
+    auto texture = std::make_shared<Renderer::Texture>("res/textures/girl.jpg");
+    material->addTexture(texture);
     ///// SET MATERIAL FINISH
 
     ////// INIT MODEL
@@ -111,9 +114,10 @@ int main(void) {
 
     // FIXME: remove after material created
     const auto &shaderProgram = material->getShaderProgram();
-    auto texture0_loc = glGetUniformLocation(shaderProgram, "MainTexture");
+    // auto texture0_loc = glGetUniformLocation(shaderProgram, "MainTexture");
 
-    unsigned int texture0_id = loadTexture("res/textures/girl.jpg");
+    // unsigned int texture0_id = loadTexture("res/textures/girl.jpg");
+
 
     float t = 0;
     float deltaT = 0.01f;
@@ -146,11 +150,11 @@ int main(void) {
 
         // Rendering - gl*-function calls
 
-        model->bind();
+        model->bind();  // активація шейдерної програми
 
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, texture0_id);
-        glUniform1i(texture0_loc, 0);
+        // glActiveTexture(GL_TEXTURE0);
+        // glBindTexture(GL_TEXTURE_2D, texture0_id);
+        // glUniform1i(texture0_loc, 0);
 
         // t = glfwGetTime();
         if (t > 1.0f || t < 0.0f) {
@@ -176,7 +180,7 @@ int main(void) {
              glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS);
 
     // очистка ресурсів з відеокарти
-    glDeleteTextures(1, &texture0_id);
+    // glDeleteTextures(1, &texture0_id);
 
     glfwTerminate();
     return 0;

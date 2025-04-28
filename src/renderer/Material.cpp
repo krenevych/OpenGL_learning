@@ -9,11 +9,15 @@ namespace Renderer {
         mProgram = std::make_shared<Program>(vertPath, fragPath);
     }
 
-    Material::~Material() {
-    }
+    Material::~Material() = default;
 
     void Material::bind() {
         mProgram->activate();
+
+       for (const auto& texture : mTextures) {
+           texture->bind(mProgram->getShaderProgram());
+       }
+
     }
 
     void Material::unbind() {
@@ -26,5 +30,9 @@ namespace Renderer {
 
     unsigned int Material::getShaderProgram() {
         return mProgram->getShaderProgram();
+    }
+
+    void Material::addTexture(std::shared_ptr<Texture> &texture) {
+        mTextures.push_back(texture);
     }
 } // Renderer
