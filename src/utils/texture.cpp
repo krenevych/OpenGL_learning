@@ -22,13 +22,14 @@ unsigned int loadTexture(const std::string &fileName) {
     // load and generate the texture
     int width, height, nrChannels;
     unsigned char *data = stbi_load(fileName.c_str(), &width, &height, &nrChannels, 0);
-    if (data) {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-    } else {
+    if (!data) {
         std::cout << "Failed to load texture" << std::endl;
+        glDeleteTextures(1, &texture);
+        return 0;
     }
 
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+    glGenerateMipmap(GL_TEXTURE_2D);
     stbi_image_free(data);
     return texture;
 }

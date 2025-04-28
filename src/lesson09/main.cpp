@@ -3,8 +3,8 @@
 
 #include <iostream>
 
-#include "utils.h"
-#include "texture.h"
+// #include "utils.h"
+// #include "texture.h"
 
 #include <glm/mat4x4.hpp>
 #include <glm/glm.hpp>
@@ -96,7 +96,6 @@ int main(void) {
     ///// SET GEOMETRY FINISH
 
     ///// SET MATERIAL START
-
     auto material = std::make_shared<Renderer::Material>(
         "res/shaders/rect.vert",
         "res/shaders/rect.frag"
