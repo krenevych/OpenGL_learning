@@ -46,55 +46,6 @@ int main(void) {
         "res/shaders/rect.frag"
     );
 
-    // позиції вершин та кольори
-    float vertices[] = {
-        // -------- Передня грань (червона) --------
-        0.0f, 0.0f, 0.0f,   1.0f, 0.0f, 0.0f, /* текстурні координати */ 0.0, 0.0,  // лівий нижній
-        1.0f, 0.0f, 0.0f,   1.0f, 0.0f, 0.0f, /* текстурні координати */ 1.0, 0.0,  // правий нижній
-        1.0f, 1.0f, 0.0f,   1.0f, 0.0f, 0.0f, /* текстурні координати */ 1.0, 1.0,  // правий верхній
-        0.0f, 1.0f, 0.0f,   1.0f, 0.0f, 0.0f, /* текстурні координати */ 0.0, 1.0,  // лівий верхній
-
-       // -------- Задня грань (зелена) --------
-        0.0f, 0.0f, 1.0f,   0.0f, 1.0f, 0.0f,   /* текстурні координати */ 0.0, 0.0,
-        1.0f, 0.0f, 1.0f,   0.0f, 1.0f, 0.0f,   /* текстурні координати */ 1.0, 0.0,
-        1.0f, 1.0f, 1.0f,   0.0f, 1.0f, 0.0f,   /* текстурні координати */ 1.0, 1.0,
-        0.0f, 1.0f, 1.0f,   0.0f, 1.0f, 0.0f,   /* текстурні координати */ 0.0, 1.0,
-
-       // -------- Ліва грань (синя) --------
-        0.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f,/* текстурні координати */ 0.0, 0.0,
-        0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 1.0f,/* текстурні координати */ 1.0, 0.0,
-        0.0f, 1.0f, 1.0f,   0.0f, 0.0f, 1.0f,/* текстурні координати */ 1.0, 1.0,
-        0.0f, 0.0f, 1.0f,   0.0f, 0.0f, 1.0f,/* текстурні координати */ 0.0, 1.0,
-
-       // -------- Права грань (жовта) --------
-        1.0f, 0.0f, 0.0f,   1.0f, 1.0f, 0.0f,   /* текстурні координати */ 0.0, 0.0,
-        1.0f, 1.0f, 0.0f,   1.0f, 1.0f, 0.0f,   /* текстурні координати */ 1.0, 0.0,
-        1.0f, 1.0f, 1.0f,   1.0f, 1.0f, 0.0f,   /* текстурні координати */ 1.0, 1.0,
-        1.0f, 0.0f, 1.0f,   1.0f, 1.0f, 0.0f,   /* текстурні координати */ 0.0, 1.0,
-
-       // -------- Нижня грань (бірюзова) --------
-        0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 1.0f,   /* текстурні координати */ 0.0, 0.0,
-        0.0f, 0.0f, 1.0f,   0.0f, 1.0f, 1.0f,   /* текстурні координати */ 1.0, 0.0,
-        1.0f, 0.0f, 1.0f,   0.0f, 1.0f, 1.0f,   /* текстурні координати */ 1.0, 1.0,
-        1.0f, 0.0f, 0.0f,   0.0f, 1.0f, 1.0f,   /* текстурні координати */ 0.0, 1.0,
-
-       // -------- Верхня грань (фіолетова) --------
-        0.0f, 1.0f, 0.0f,   1.0f, 0.0f, 1.0f,    /* текстурні координати */ 0.0, 0.0,
-        1.0f, 1.0f, 0.0f,   1.0f, 0.0f, 1.0f,    /* текстурні координати */ 1.0, 0.0,
-        1.0f, 1.0f, 1.0f,   1.0f, 0.0f, 1.0f,    /* текстурні координати */ 1.0, 1.0,
-        0.0f, 1.0f, 1.0f,   1.0f, 0.0f, 1.0f,    /* текстурні координати */ 0.0, 1.0,
-   };
-
-    unsigned int indices[] = {
-        0, 1, 2,  2, 3, 0,       // передня
-        4, 5, 6,  6, 7, 4,       // задня
-        8, 9,10, 10,11, 8,       // ліва
-       12,13,14, 14,15,12,       // права
-       16,17,18, 18,19,16,       // нижня
-       20,21,22, 22,23,20        // верхня
-    };
-
-
     auto cubeGeom = Renderer::Geometry();
     cubeGeom.setVertices({
         // -------- Передня грань (червона) --------
@@ -147,57 +98,6 @@ int main(void) {
        20,21,22, 22,23,20        // верхня
     });
 
-    GLuint vert_buffer, index_buffer; // data
-    GLuint VAO; // vertex array object
-
-    glGenBuffers(1, &vert_buffer);
-    glGenBuffers(1, &index_buffer);
-    glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
-
-    // Vertices
-    glBindBuffer(GL_ARRAY_BUFFER, vert_buffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    // Позиція вершини → location = 0 в шейдері
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(
-        0, // location - 0
-        3, // 3 компоненти: x, y, z
-        GL_FLOAT, // тип даних
-        GL_FALSE, // не нормалізувати
-        8 * sizeof(float), // stride: 5 float-а на вершину
-        (void *) 0 // offset: починаємо з 0
-    );
-    // enables location 0
-
-    // Кольори вершини → location = 1 в шейдері
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(
-        1, // location - 1
-        3, // 3 компоненти: r, g, b
-        GL_FLOAT, // тип даних
-        GL_FALSE, // не нормалізувати
-        8 * sizeof(float), // stride: 5 float-а на вершину
-        (void *) (sizeof(float) * 3) // offset: починаємо з 2
-    );
-    // enables location 1
-
-    // Текстурні координати → location = 2 в шейдері
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(
-        2, // location - 2
-        2, // 3 компоненти: r, g, b
-        GL_FLOAT, // тип даних
-        GL_FALSE, // не нормалізувати
-        8 * sizeof(float), // stride: 5 float-а на вершину
-        (void *) (sizeof(float) * 6) // offset: починаємо з 5
-    );
-    // enables location 1
-
-    // Indices
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     auto texture0_loc = glGetUniformLocation(shaderProgram, "MainTexture");
 
@@ -251,11 +151,6 @@ int main(void) {
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, (float*)(&view));
         glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, (float*)(&projection));
 
-        // glBindVertexArray(VAO);
-        //
-        // glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(unsigned int), GL_UNSIGNED_INT, nullptr);
-        // glBindVertexArray(0); // VAO deactivation
-
         cubeGeom.bind();
         cubeGeom.draw();
         cubeGeom.unbind();
@@ -270,10 +165,7 @@ int main(void) {
              glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS);
 
     // очистка ресурсів з відеокарти
-    glDeleteBuffers(1, &vert_buffer);
-    glDeleteBuffers(1, &index_buffer);
     glDeleteTextures(1, &texture0_id);
-    glDeleteVertexArrays(1, &VAO);
     glDeleteProgram(shaderProgram);
 
 

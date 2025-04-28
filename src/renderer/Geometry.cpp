@@ -18,7 +18,8 @@ namespace Renderer {
 
     Geometry::~Geometry() {
         glDeleteBuffers(1, &vert_buffer);
-        glDeleteBuffers(1, &index_buffer);
+        if (index_buffer != 0)
+            glDeleteBuffers(1, &index_buffer);
         glDeleteVertexArrays(1, &VAO);
     }
 
