@@ -251,10 +251,14 @@ int main(void) {
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, (float*)(&view));
         glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, (float*)(&projection));
 
-        glBindVertexArray(VAO);
+        // glBindVertexArray(VAO);
+        //
+        // glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(unsigned int), GL_UNSIGNED_INT, nullptr);
+        // glBindVertexArray(0); // VAO deactivation
 
-        glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(unsigned int), GL_UNSIGNED_INT, nullptr);
-        glBindVertexArray(0); // VAO deactivation
+        cubeGeom.bind();
+        cubeGeom.draw();
+        cubeGeom.unbind();
 
 
         /* Swap front and back buffers */

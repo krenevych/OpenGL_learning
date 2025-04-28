@@ -29,8 +29,6 @@ namespace Renderer {
         // Vertices
         glBindBuffer(GL_ARRAY_BUFFER, vert_buffer);
         glBufferData(GL_ARRAY_BUFFER, mVertices.size() * sizeof(float), mVertices.data(), GL_STATIC_DRAW);
-
-
     }
 
     void Geometry::setIndices(const std::vector<unsigned int> &indices) {
@@ -46,7 +44,7 @@ namespace Renderer {
 
     }
 
-    void Geometry::addAttribute(const std::string& name, unsigned int size, int offset, int location) {
+    void Geometry::addAttribute(const std::string& name, int size, int offset, int location) {
         auto attrib = Attribute {
             .name = name,
             .size = size,
@@ -56,9 +54,29 @@ namespace Renderer {
         mAttributes.push_back(attrib);
     }
 
+    int Geometry::getStride() {
+        auto stride = 0;
+        for (const auto& attrib : mAttributes) {
+            stride += attrib.size;
+        }
+        return stride;
+    }
+
     void Geometry::bind() {
         glBindVertexArray(VAO);
 
+        for (const auto& attrib : mAttributes) {
+            // Позиція вершини → location = 0 в шейдері
+            glEnableVertexAttribArray(attrib.location);
+            glVertexAttribPointer(
+                attrib.location, // location
+                attrib.size, // size
+                GL_FLOAT, // тип даних
+                GL_FALSE, // не нормалізувати
+                getStride() * sizeof(float), // stride
+                (void *) (sizeof(float) * attrib.offset) // offset
+            );
+        }
     }
 
     void Geometry::unbind() {
@@ -77,7 +95,7 @@ namespace Renderer {
         if (index_buffer != 0) {
             return mIndices.size();
         } else {
-            return 0; // TODO:
+            return mVertices.size() / getStride(); // TODO:
         }
     }
 } // Renderer

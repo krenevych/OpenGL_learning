@@ -12,7 +12,7 @@ namespace Renderer {
 
     struct Attribute {
         std::string name;
-        unsigned int size;
+        int size;
         int offset;
         int location;
     };
@@ -25,7 +25,9 @@ namespace Renderer {
 
         void setVertices(const std::vector<float>& vertices);
         void setIndices(const std::vector<unsigned int>& indices);
-        void addAttribute(const std::string &name, unsigned int size, int offset, int location);
+        void addAttribute(const std::string &name, int size, int offset, int location);
+
+        int getStride();
 
         void bind();
 
