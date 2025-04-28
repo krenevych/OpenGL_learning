@@ -41,13 +41,8 @@ int main(void) {
 
     glClearColor(1.0, 1.0, 1.0, 1.0);
 
-    GLuint shaderProgram = createProgram(
-        "res/shaders/rect.vert",
-        "res/shaders/rect.frag"
-    );
-
-    auto cubeGeom = Renderer::Geometry();
-    cubeGeom.setVertices({
+    auto cubeGeom = std::make_shared<Renderer::Geometry>();
+    cubeGeom->setVertices({
         // -------- Передня грань (червона) --------
         0.0f, 0.0f, 0.0f,   1.0f, 0.0f, 0.0f, /* текстурні координати */ 0.0, 0.0,  // лівий нижній
         1.0f, 0.0f, 0.0f,   1.0f, 0.0f, 0.0f, /* текстурні координати */ 1.0, 0.0,  // правий нижній
@@ -85,11 +80,11 @@ int main(void) {
         0.0f, 1.0f, 1.0f,   1.0f, 0.0f, 1.0f,    /* текстурні координати */ 0.0, 1.0,
    });
 
-    cubeGeom.addAttribute("aPos", 3, 0, 0);
-    cubeGeom.addAttribute("aColor", 3, 3, 1);
-    cubeGeom.addAttribute("aTex", 2, 6, 2);
+    cubeGeom->addAttribute("aPos", 3, 0, 0);
+    cubeGeom->addAttribute("aColor", 3, 3, 1);
+    cubeGeom->addAttribute("aTex", 2, 6, 2);
 
-    cubeGeom.setIndices({
+    cubeGeom->setIndices({
         0, 1, 2,  2, 3, 0,       // передня
         4, 5, 6,  6, 7, 4,       // задня
         8, 9,10, 10,11, 8,       // ліва
@@ -97,7 +92,25 @@ int main(void) {
        16,17,18, 18,19,16,       // нижня
        20,21,22, 22,23,20        // верхня
     });
+    ///// SET GEOMETRY FINISH
 
+    ///// SET MATERIAL START
+    GLuint shaderProgram = createProgram(
+        "res/shaders/rect.vert",
+        "res/shaders/rect.frag"
+    );
+
+    auto progam = std::make_shared<Renderer::Program>();
+    auto material = std::make_shared<Renderer::Material>();
+    material->setProgram(progam);
+    // додамо текстури, властивості і т.д.
+
+    ///// SET MATERIAL FINISH
+
+    ////// INIT MODEL
+    auto model = std::make_shared<Renderer::Model>();
+    model->setGeometry(cubeGeom);
+    model->setMaterial(material);
 
     auto texture0_loc = glGetUniformLocation(shaderProgram, "MainTexture");
 
@@ -109,7 +122,7 @@ int main(void) {
     auto modelLoc = glGetUniformLocation(shaderProgram, "Model");
     auto viewLoc = glGetUniformLocation(shaderProgram, "View");
     auto projectionLoc = glGetUniformLocation(shaderProgram, "Projection");
-    auto model = glm::mat4(1.0f);
+    auto modelMat = glm::mat4(1.0f);
 
     glm::mat4 view = glm::lookAt(
         glm::vec3(0.0f, 1.5f, 4.0f), // позиція камери
@@ -146,14 +159,12 @@ int main(void) {
 
         t += deltaT;
 
-        model = glm::rotate(model, glm::radians(5.0f) / 10, glm::vec3(0.0f, 1.0f, 0.0f));
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        modelMat = glm::rotate(modelMat, glm::radians(5.0f) / 10, glm::vec3(0.0f, 1.0f, 0.0f));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelMat));
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, (float*)(&view));
         glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, (float*)(&projection));
 
-        cubeGeom.bind();
-        cubeGeom.draw();
-        cubeGeom.unbind();
+        model->draw();
 
 
         /* Swap front and back buffers */

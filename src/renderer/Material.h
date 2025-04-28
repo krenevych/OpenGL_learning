@@ -4,23 +4,27 @@
 
 #ifndef MATERIAL_H
 #define MATERIAL_H
+#include <memory>
+
+#include "Program.h"
 
 namespace Renderer {
-
-class Material {
+    class Material {
     public:
-    Material();
-    virtual ~Material();
+        Material();
 
-    void bind();
+        virtual ~Material();
 
-    void unbind();
+        void bind();
+
+        void unbind();
+
+        void setProgram(std::shared_ptr<Program>& program);
 
     private:
+        std::shared_ptr<Program> mProgram;
 
-
-};
-
+    };
 } // Renderer
 
 #endif //MATERIAL_H

@@ -16,4 +16,8 @@ namespace Renderer {
 
     void Material::unbind() {
     }
+
+    void Material::setProgram(std::shared_ptr<Program>& program) {
+        mProgram = program;
+    }
 } // Renderer

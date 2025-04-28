@@ -19,6 +19,10 @@ namespace Renderer {
 
         void draw();
 
+        void setGeometry(std::shared_ptr<Geometry>& geometry);
+        void setMaterial(std::shared_ptr<Material>& material);
+        void setTransform(std::shared_ptr<Transformation>& transform);
+
     private:
 
         std::shared_ptr<Geometry> mGeometry;

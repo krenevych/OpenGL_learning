@@ -27,4 +27,16 @@ namespace Renderer {
         mMaterial->unbind();
 
     }
+
+    void Model::setGeometry(std::shared_ptr<Geometry> &geometry) {
+        mGeometry = geometry;
+    }
+
+    void Model::setMaterial(std::shared_ptr<Material> &material) {
+        mMaterial = material;
+    }
+
+    void Model::setTransform(std::shared_ptr<Transformation> &transform) {
+        mTransform = transform;
+    }
 } // Renderer
