@@ -3,8 +3,6 @@
 
 #include <iostream>
 
-// #include "utils.h"
-// #include "texture.h"
 
 #include <glm/mat4x4.hpp>
 #include <glm/glm.hpp>
@@ -107,6 +105,11 @@ int main(void) {
 
     auto textureSecond = std::make_shared<Renderer::Texture>("res/textures/house.jpg");
     material->setTexture("SecondTexture", textureSecond);
+
+    auto ambientColorProperty = std::make_shared<Renderer::PropertyVec4>(
+        "ambientColor", 0.0f, 1.0f, 0.0f, 1.0f
+    );
+    material->setProperty(ambientColorProperty);
     ///// SET MATERIAL FINISH
 
     ////// INIT MODEL
@@ -114,29 +117,26 @@ int main(void) {
     model->setGeometry(cubeGeom);
     model->setMaterial(material);
 
-    // FIXME: remove after material created
-    const auto &shaderProgram = material->getShaderProgram();
 
     float t = 0;
     float deltaT = 0.01f;
 
-    auto modelLoc = glGetUniformLocation(shaderProgram, "Model");
-    auto viewLoc = glGetUniformLocation(shaderProgram, "View");
-    auto projectionLoc = glGetUniformLocation(shaderProgram, "Projection");
     auto modelMat = glm::mat4(1.0f);
+    const auto viewProp = std::make_shared<Renderer::PropertyMat4>("View", glm::lookAt(
+                                                                       glm::vec3(0.0f, 1.5f, 4.0f), // позиція камери
+                                                                       glm::vec3(0.0f, 0.0f, 0.0f), // куди дивимось
+                                                                       glm::vec3(0.0f, 1.0f, 0.0f) // вектор вгору
+                                                                   ));
+    material->setProperty(viewProp);
 
-    glm::mat4 view = glm::lookAt(
-        glm::vec3(0.0f, 1.5f, 4.0f), // позиція камери
-        glm::vec3(0.0f, 0.0f, 0.0f), // куди дивимось
-        glm::vec3(0.0f, 1.0f, 0.0f) // вектор вгору
-    );
-
-    glm::mat4 projection = glm::perspective(
-        glm::radians(45.0f),
-        (float) width / (float) height,
-        0.1f,
-        100.0f
-    );
+    const auto projectionProp = std::make_shared<Renderer::PropertyMat4>("Projection",
+                                                                         glm::perspective(
+                                                                             glm::radians(45.0f),
+                                                                             (float) width / (float) height,
+                                                                             0.1f,
+                                                                             100.0f
+                                                                         ));
+    material->setProperty(projectionProp);
 
     glEnable(GL_DEPTH_TEST);
 
@@ -145,21 +145,15 @@ int main(void) {
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // Rendering - gl*-function calls
 
-        model->bind();  // активація шейдерної програми
-
-        // t = glfwGetTime();
         if (t > 1.0f || t < 0.0f) {
             deltaT = -deltaT;
         }
-
         t += deltaT;
 
         modelMat = glm::rotate(modelMat, glm::radians(5.0f) / 10, glm::vec3(0.0f, 1.0f, 0.0f));
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelMat));
-        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, (float *) (&view));
-        glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, (float *) (&projection));
+        const auto modelMatProp = std::make_shared<Renderer::PropertyMat4>("Model", modelMat);
+        material->setProperty(modelMatProp);
 
         model->draw();
 

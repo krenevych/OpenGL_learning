@@ -8,6 +8,7 @@
 #include <memory>
 
 #include "Program.h"
+#include "Property.h"
 #include "Texture.h"
 
 namespace Renderer {
@@ -30,9 +31,12 @@ namespace Renderer {
 
         void setTexture(const std::string &name, const std::shared_ptr<Texture> &texture);
 
+        void setProperty(const std::shared_ptr<Property> & property);
+
     private:
         std::shared_ptr<Program> mProgram;
         std::map<std::string, std::shared_ptr<Texture>> mTextures;
+        std::map<std::string, std::shared_ptr<Property>> mProperties;
 
 
     };

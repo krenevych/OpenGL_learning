@@ -36,6 +36,12 @@ namespace Renderer {
             const auto &texture = textureEntity.second;
             texture->bind(mProgram->getShaderProgram(), name, textureUnit++);
         }
+
+        for (const auto &propertyEntity: mProperties) {
+            const auto &name = propertyEntity.first;
+            const auto &property = propertyEntity.second;
+            property->bind(mProgram->getShaderProgram());
+        }
     }
 
     void Material::unbind() {
@@ -53,4 +59,9 @@ namespace Renderer {
     void Material::setTexture(const std::string &name, const std::shared_ptr<Texture> &texture) {
         mTextures[name] = texture;
     }
+
+    void Material::setProperty(const std::shared_ptr<Property> &property) {
+        mProperties[property->getName()] = property;
+    }
+
 } // Renderer

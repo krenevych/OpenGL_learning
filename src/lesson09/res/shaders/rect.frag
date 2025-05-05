@@ -12,5 +12,5 @@ uniform sampler2D SecondTexture; // перший тексурний юнік
 void main() {
     vec4 color1 = texture(MainTexture, vTex);
     vec4 color2 = texture(SecondTexture, vTex);
-    FragColor = mix(color1, color2, 0.5);
+    FragColor = mix(color1, color2, 0.5) * ambientColor;
 }

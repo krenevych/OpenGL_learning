@@ -19,12 +19,12 @@ namespace Renderer {
         // та draw calls
 
         mGeometry->bind();
-        // mMaterial->bind();  // FIXME: uncomment after refactoring
+        mMaterial->bind();  // FIXME: uncomment after refactoring
 
         mGeometry->draw();
 
         mGeometry->unbind();
-        // mMaterial->unbind();  // FIXME: uncomment after refactoring
+        mMaterial->unbind();  // FIXME: uncomment after refactoring
 
     }
 
