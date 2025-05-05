@@ -19,17 +19,13 @@ namespace Renderer {
         // та draw calls
 
         mGeometry->bind();
-        mMaterial->bind();  // FIXME: uncomment after refactoring
+        mMaterial->bind();
 
         mGeometry->draw();
 
         mGeometry->unbind();
-        mMaterial->unbind();  // FIXME: uncomment after refactoring
+        mMaterial->unbind();
 
-    }
-
-    void Model::bind() {  // FIXME: remove after refactoring
-        mMaterial->bind();
     }
 
     void Model::setGeometry(std::shared_ptr<Geometry> &geometry) {

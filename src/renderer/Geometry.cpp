@@ -96,7 +96,7 @@ namespace Renderer {
         if (index_buffer != 0) {
             return mIndices.size();
         } else {
-            return mVertices.size() / getStride(); // TODO:
+            return mVertices.size() / getStride();
         }
     }
 } // Renderer

@@ -18,7 +18,6 @@ namespace Renderer {
         virtual ~Model();
 
         void draw();
-        void bind(); // FIXME: Remove after refactoring
 
         void setGeometry(std::shared_ptr<Geometry>& geometry);
         void setMaterial(std::shared_ptr<Material>& material);

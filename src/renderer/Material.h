@@ -27,8 +27,6 @@ namespace Renderer {
 
         void setProgram(std::shared_ptr<Program> &program);
 
-        unsigned int getShaderProgram();
-
         void setTexture(const std::string &name, const std::shared_ptr<Texture> &texture);
 
         void setProperty(const std::shared_ptr<Property> & property);

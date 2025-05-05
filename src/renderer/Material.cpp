@@ -52,10 +52,6 @@ namespace Renderer {
         mProgram = program;
     }
 
-    unsigned int Material::getShaderProgram() {
-        return mProgram->getShaderProgram();
-    }
-
     void Material::setTexture(const std::string &name, const std::shared_ptr<Texture> &texture) {
         mTextures[name] = texture;
     }
