@@ -13,7 +13,7 @@ public:
     explicit Texture(const std::string& fileName);
     ~Texture();
 
-    void bind(unsigned int shaderProgram) const;
+    void bind(unsigned int shaderProgram, const std::string &name, unsigned int textureUnit) const;
     void unbind();
 
 private:

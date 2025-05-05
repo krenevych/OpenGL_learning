@@ -4,6 +4,7 @@
 
 #ifndef MATERIAL_H
 #define MATERIAL_H
+#include <map>
 #include <memory>
 
 #include "Program.h"
@@ -27,11 +28,11 @@ namespace Renderer {
 
         unsigned int getShaderProgram();
 
-        void addTexture(std::shared_ptr<Texture> &texture);
+        void setTexture(const std::string &name, const std::shared_ptr<Texture> &texture);
 
     private:
         std::shared_ptr<Program> mProgram;
-        std::vector<std::shared_ptr<Texture>> mTextures;
+        std::map<std::string, std::shared_ptr<Texture>> mTextures;
 
 
     };

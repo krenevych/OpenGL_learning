@@ -103,7 +103,10 @@ int main(void) {
 
     // додамо текстури, властивості і т.д.
     auto texture = std::make_shared<Renderer::Texture>("res/textures/girl.jpg");
-    material->addTexture(texture);
+    material->setTexture("MainTexture", texture);
+
+    auto textureSecond = std::make_shared<Renderer::Texture>("res/textures/house.jpg");
+    material->setTexture("SecondTexture", textureSecond);
     ///// SET MATERIAL FINISH
 
     ////// INIT MODEL
@@ -113,10 +116,6 @@ int main(void) {
 
     // FIXME: remove after material created
     const auto &shaderProgram = material->getShaderProgram();
-    // auto texture0_loc = glGetUniformLocation(shaderProgram, "MainTexture");
-
-    // unsigned int texture0_id = loadTexture("res/textures/girl.jpg");
-
 
     float t = 0;
     float deltaT = 0.01f;
@@ -131,7 +130,6 @@ int main(void) {
         glm::vec3(0.0f, 0.0f, 0.0f), // куди дивимось
         glm::vec3(0.0f, 1.0f, 0.0f) // вектор вгору
     );
-
 
     glm::mat4 projection = glm::perspective(
         glm::radians(45.0f),
@@ -150,10 +148,6 @@ int main(void) {
         // Rendering - gl*-function calls
 
         model->bind();  // активація шейдерної програми
-
-        // glActiveTexture(GL_TEXTURE0);
-        // glBindTexture(GL_TEXTURE_2D, texture0_id);
-        // glUniform1i(texture0_loc, 0);
 
         // t = glfwGetTime();
         if (t > 1.0f || t < 0.0f) {

@@ -22,11 +22,11 @@ namespace Renderer {
         }
     }
 
-    void Texture::bind(unsigned int shaderProgram) const {
-        auto texture0_loc = glGetUniformLocation(shaderProgram, "MainTexture");
-        glActiveTexture(GL_TEXTURE0);
+    void Texture::bind(unsigned int shaderProgram, const std::string& name, unsigned int textureUnit) const {
+        auto texture0_loc = glGetUniformLocation(shaderProgram, name.c_str()); // (char *)&name
+        glActiveTexture(GL_TEXTURE0 + textureUnit);  // активує текстурний юніт під номером textureUnit
         glBindTexture(GL_TEXTURE_2D, mTextureId);
-        glUniform1i(texture0_loc, 0);
+        glUniform1i(texture0_loc, (int)textureUnit);
     }
 
     void Texture::unbind() {

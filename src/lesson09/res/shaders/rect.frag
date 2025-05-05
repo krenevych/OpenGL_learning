@@ -7,8 +7,10 @@ out vec4 FragColor;
 
 uniform vec4 ambientColor;
 uniform sampler2D MainTexture; // нульовий текстурний юніт
+uniform sampler2D SecondTexture; // перший тексурний юнік
 
 void main() {
-    FragColor = texture(MainTexture, vTex);
-//    FragColor = vColor;
+    vec4 color1 = texture(MainTexture, vTex);
+    vec4 color2 = texture(SecondTexture, vTex);
+    FragColor = mix(color1, color2, 0.5);
 }
