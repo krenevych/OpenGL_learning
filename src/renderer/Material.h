@@ -7,9 +7,11 @@
 #include <map>
 #include <memory>
 
+#include "Camera.h"
 #include "Program.h"
 #include "Property.h"
 #include "Texture.h"
+#include "Transformation.h"
 
 namespace Renderer {
     class Material {
@@ -21,22 +23,23 @@ namespace Renderer {
 
         virtual ~Material();
 
-        void bind();
+        void bind(
+            const std::shared_ptr<Camera> &camera,
+            const glm::mat4 &modelMat
+        ) const;
 
-        void unbind();
+        static void unbind() ;
 
-        void setProgram(std::shared_ptr<Program> &program);
+        void setProgram(const std::shared_ptr<Program> &program);
 
         void setTexture(const std::string &name, const std::shared_ptr<Texture> &texture);
 
-        void setProperty(const std::shared_ptr<Property> & property);
+        void setProperty(const std::shared_ptr<Property> &property);
 
     private:
         std::shared_ptr<Program> mProgram;
-        std::map<std::string, std::shared_ptr<Texture>> mTextures;
-        std::map<std::string, std::shared_ptr<Property>> mProperties;
-
-
+        std::map<std::string, std::shared_ptr<Texture> > mTextures;
+        std::map<std::string, std::shared_ptr<Property> > mProperties;
     };
 } // Renderer
 

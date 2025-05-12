@@ -3,12 +3,8 @@
 
 #include <iostream>
 
-
-#include <glm/mat4x4.hpp>
-#include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
-#include "Model.h"
+#include "Scene.h"
+#include "SceneBase.h"
 
 int main(void) {
     /* Initialize the library */
@@ -37,126 +33,19 @@ int main(void) {
     }
     glfwSwapInterval(1);
 
-    glClearColor(1.0, 1.0, 1.0, 1.0);
-
-    ///// SET GEOMETRY START
-    auto cubeGeom = std::make_shared<Renderer::Geometry>();
-    cubeGeom->setVertices({
-        // -------- Передня грань (червона) --------
-        0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, /* текстурні координати */ 0.0, 0.0, // лівий нижній
-        1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, /* текстурні координати */ 1.0, 0.0, // правий нижній
-        1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, /* текстурні координати */ 1.0, 1.0, // правий верхній
-        0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, /* текстурні координати */ 0.0, 1.0, // лівий верхній
-
-        // -------- Задня грань (зелена) --------
-        0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, /* текстурні координати */ 0.0, 0.0,
-        1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, /* текстурні координати */ 1.0, 0.0,
-        1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, /* текстурні координати */ 1.0, 1.0,
-        0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, /* текстурні координати */ 0.0, 1.0,
-
-        // -------- Ліва грань (синя) --------
-        0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,/* текстурні координати */ 0.0, 0.0,
-        0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,/* текстурні координати */ 1.0, 0.0,
-        0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,/* текстурні координати */ 1.0, 1.0,
-        0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,/* текстурні координати */ 0.0, 1.0,
-
-        // -------- Права грань (жовта) --------
-        1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, /* текстурні координати */ 0.0, 0.0,
-        1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, /* текстурні координати */ 1.0, 0.0,
-        1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, /* текстурні координати */ 1.0, 1.0,
-        1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, /* текстурні координати */ 0.0, 1.0,
-
-        // -------- Нижня грань (бірюзова) --------
-        0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, /* текстурні координати */ 0.0, 0.0,
-        0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, /* текстурні координати */ 1.0, 0.0,
-        1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, /* текстурні координати */ 1.0, 1.0,
-        1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, /* текстурні координати */ 0.0, 1.0,
-
-        // -------- Верхня грань (фіолетова) --------
-        0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, /* текстурні координати */ 0.0, 0.0,
-        1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, /* текстурні координати */ 1.0, 0.0,
-        1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, /* текстурні координати */ 1.0, 1.0,
-        0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, /* текстурні координати */ 0.0, 1.0,
-    });
-
-    cubeGeom->addAttribute("aPos", 3, 0, 0);
-    cubeGeom->addAttribute("aColor", 3, 3, 1);
-    cubeGeom->addAttribute("aTex", 2, 6, 2);
-
-    cubeGeom->setIndices({
-        0, 1, 2, 2, 3, 0, // передня
-        4, 5, 6, 6, 7, 4, // задня
-        8, 9, 10, 10, 11, 8, // ліва
-        12, 13, 14, 14, 15, 12, // права
-        16, 17, 18, 18, 19, 16, // нижня
-        20, 21, 22, 22, 23, 20 // верхня
-    });
-    ///// SET GEOMETRY FINISH
-
-    ///// SET MATERIAL START
-    auto material = std::make_shared<Renderer::Material>(
-        "res/shaders/rect.vert",
-        "res/shaders/rect.frag"
-    );
-
-    // додамо текстури, властивості і т.д.
-    auto texture = std::make_shared<Renderer::Texture>("res/textures/girl.jpg");
-    material->setTexture("MainTexture", texture);
-
-    auto textureSecond = std::make_shared<Renderer::Texture>("res/textures/house.jpg");
-    material->setTexture("SecondTexture", textureSecond);
-
-    auto ambientColorProperty = std::make_shared<Renderer::PropertyVec4>(
-        "ambientColor", 0.0f, 1.0f, 0.0f, 1.0f
-    );
-    material->setProperty(ambientColorProperty);
-    ///// SET MATERIAL FINISH
-
-    ////// INIT MODEL
-    auto model = std::make_shared<Renderer::Model>();
-    model->setGeometry(cubeGeom);
-    model->setMaterial(material);
-
+    const auto scene = std::make_shared<Scene>(width, height);
+    scene->onSceneInit();
 
     float t = 0;
     float deltaT = 0.01f;
 
-    auto modelMat = glm::mat4(1.0f);
-    const auto viewProp = std::make_shared<Renderer::PropertyMat4>("View", glm::lookAt(
-                                                                       glm::vec3(0.0f, 1.5f, 4.0f), // позиція камери
-                                                                       glm::vec3(0.0f, 0.0f, 0.0f), // куди дивимось
-                                                                       glm::vec3(0.0f, 1.0f, 0.0f) // вектор вгору
-                                                                   ));
-    material->setProperty(viewProp);
-
-    const auto projectionProp = std::make_shared<Renderer::PropertyMat4>("Projection",
-                                                                         glm::perspective(
-                                                                             glm::radians(45.0f),
-                                                                             (float) width / (float) height,
-                                                                             0.1f,
-                                                                             100.0f
-                                                                         ));
-    material->setProperty(projectionProp);
-
-    glEnable(GL_DEPTH_TEST);
-
     /* Loop until the user closes the window */
     do {
-        /* Render here */
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-
         if (t > 1.0f || t < 0.0f) {
             deltaT = -deltaT;
         }
         t += deltaT;
-
-        modelMat = glm::rotate(modelMat, glm::radians(5.0f) / 10, glm::vec3(0.0f, 1.0f, 0.0f));
-        const auto modelMatProp = std::make_shared<Renderer::PropertyMat4>("Model", modelMat);
-        material->setProperty(modelMatProp);
-
-        model->draw();
-
+        scene->render();
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
@@ -165,9 +54,6 @@ int main(void) {
         glfwPollEvents();
     } while (!glfwWindowShouldClose(window) &&
              glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS);
-
-    // очистка ресурсів з відеокарти
-    // glDeleteTextures(1, &texture0_id);
 
     glfwTerminate();
     return 0;

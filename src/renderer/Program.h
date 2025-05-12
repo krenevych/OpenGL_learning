@@ -25,7 +25,7 @@ public:
 
     void activate() const;
 
-    void deactivate();
+    static void deactivate();
 
 private:
 

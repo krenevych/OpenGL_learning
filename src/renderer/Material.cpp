@@ -4,6 +4,7 @@
 
 #include "Material.h"
 
+
 namespace Renderer {
     Material::Material(const std::string &vertPath, const std::string &fragPath) {
         mProgram = std::make_shared<Program>(vertPath, fragPath);
@@ -11,24 +12,28 @@ namespace Renderer {
 
     Material::~Material() = default;
 
-    void Material::bind() {
+    void Material::bind(
+        const std::shared_ptr<Camera> &camera,
+        const glm::mat4 &modelMat
+    ) const {
         mProgram->activate();
 
+        glUniformMatrix4fv(
+            glGetUniformLocation(mProgram->getShaderProgram(), "Model"),
+            1, GL_FALSE, (float *) &modelMat
+        );
 
-        // int r = 10;
-        // int g = r; // копіювання
-        //
-        // g = 99; // r = 10, g = 99
+        const glm::mat4 viewMatr = camera->getViewMatrix();
+        glUniformMatrix4fv(
+            glGetUniformLocation(mProgram->getShaderProgram(), "View"),
+            1, GL_FALSE, (float *) &viewMatr
+        );
 
-
-        // int r = 10;
-        // int& g = r;
-        // g = 99; // r = 99, g = 99
-
-        // int r = 10;
-        // const int& g = r;
-        // // g = 99; // ця операція не валідна, бо g - незмінювана
-        // r = 99; // r = 99, g = 99
+        const glm::mat4 projectionMatr = camera->getProjectionMatrix();
+        glUniformMatrix4fv(
+            glGetUniformLocation(mProgram->getShaderProgram(), "Projection"),
+            1, GL_FALSE, (float *) &projectionMatr
+        );
 
         int textureUnit = 0;
         for (const auto &textureEntity: mTextures) {
@@ -45,10 +50,10 @@ namespace Renderer {
     }
 
     void Material::unbind() {
-        mProgram->deactivate();
+        Program::deactivate();
     }
 
-    void Material::setProgram(std::shared_ptr<Program> &program) {
+    void Material::setProgram(const std::shared_ptr<Program> &program) {
         mProgram = program;
     }
 
@@ -59,5 +64,4 @@ namespace Renderer {
     void Material::setProperty(const std::shared_ptr<Property> &property) {
         mProperties[property->getName()] = property;
     }
-
 } // Renderer
