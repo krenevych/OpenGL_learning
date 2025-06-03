@@ -13,7 +13,7 @@ int main(void) {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    // glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // для macOS
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // для macOS
 
 
     auto width = 1280;
@@ -36,15 +36,8 @@ int main(void) {
     const auto scene = std::make_shared<Scene>(width, height);
     scene->onSceneInit();
 
-    float t = 0;
-    float deltaT = 0.01f;
-
     /* Loop until the user closes the window */
     do {
-        if (t > 1.0f || t < 0.0f) {
-            deltaT = -deltaT;
-        }
-        t += deltaT;
         scene->render();
 
         /* Swap front and back buffers */
